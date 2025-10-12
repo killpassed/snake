@@ -14,7 +14,8 @@ STRINGS = {
         "fullscreen": "Полноэкранный режим",
         "lives": "Жизни",
         "score": "Счёт",
-        "pause": "Пауза"
+        "pause": "Пауза",
+        "back": "Назад"
     },
     "en": {
         "title": "SNAKE",
@@ -31,6 +32,7 @@ STRINGS = {
         "fullscreen": "Fullscreen",
         "lives": "Lives",
         "score": "Score",
-        "pause": "Pause"
+        "pause": "Pause",
+        "back": "Back"
     }
 }

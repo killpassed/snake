@@ -2,7 +2,6 @@ import pygame
 from snake.strings import STRINGS
 from snake.config import SNAKE_COLORS, RESOLUTIONS
 from snake.utils import save_settings
-from snake.config import CONTROL_SETS
 
 class Menu:
     def __init__(self, game):
@@ -28,19 +27,15 @@ class Menu:
     def run(self):
         pygame.mouse.set_visible(False)
         while True:
-            lang = self.game.settings.get("language", "ru")
-            s = STRINGS.get(lang, STRINGS["ru"])
+            s = STRINGS[self.game.settings["language"]]
             options = [s["play"], s["settings"], s["quit"]]
 
             self.game.screen.fill((0, 0, 0))
             self.draw_text(s["title"], 72, self.game.height // 4, self.game.snake_color)
-
             for i, opt in enumerate(options):
                 color = (255, 255, 255) if i == self.selected else (150, 150, 150)
                 self.draw_text(opt, 40, self.game.height // 2 + i * 60, color)
-
             self.draw_corner_text(["version 1.1", "game by killpassed"])
-
             pygame.display.flip()
 
             for e in pygame.event.get():
@@ -51,7 +46,7 @@ class Menu:
                         self.selected = (self.selected - 1) % len(options)
                     elif e.key == pygame.K_DOWN:
                         self.selected = (self.selected + 1) % len(options)
-                    elif e.key == pygame.K_RETURN:
+                    elif e.key in (pygame.K_RETURN, pygame.K_LEFT, pygame.K_RIGHT):
                         if self.selected == 0:
                             return "play"
                         elif self.selected == 1:
@@ -60,32 +55,32 @@ class Menu:
                             return "quit"
 
     def settings_menu(self):
-        items = ["language", "controls", "color", "resolution", "grid", "fullscreen", "back"]
         selected = 0
-
         while True:
-            lang = self.game.settings.get("language", "ru")
-            s = STRINGS.get(lang, STRINGS["ru"])
-            self.game.screen.fill((0, 0, 0))
+            s = STRINGS[self.game.settings["language"]]
+            items = ["language", "controls", "color", "resolution", "grid", "fullscreen", "back"]
 
+            self.game.screen.fill((0, 0, 0))
             for i, key in enumerate(items):
-                text = s.get(key, key)
-                if key == "language":
-                    val = "Русский" if self.game.settings.get("language", "ru") == "ru" else "English"
-                elif key == "controls":
-                    val = "WASD" if self.game.settings.get("controls", "arrows") == "wasd" else "↑↓←→"
-                elif key == "color":
-                    val = str(self.game.settings.get("snake_color", 0) + 1)
-                elif key == "resolution":
-                    res = RESOLUTIONS[self.game.settings.get("resolution", 0)]
-                    val = f"{res[0]}x{res[1]}"
-                elif key == "grid":
-                    val = s["on"] if self.game.settings.get("show_grid", False) else s["off"]
-                elif key == "fullscreen":
-                    val = s["on"] if self.game.settings.get("fullscreen", False) else s["off"]
-                elif key == "back":
+                if key == "back":
+                    text = s["back"]
                     val = ""
-                txt = f"{text}: {val}" if val != "" else text
+                else:
+                    text = s[key]
+                    if key == "language":
+                        val = "Русский" if self.game.settings["language"] == "ru" else "English"
+                    elif key == "controls":
+                        val = "WASD" if self.game.settings["controls"] == "wasd" else "↑↓←→"
+                    elif key == "color":
+                        val = str(self.game.settings["snake_color"] + 1)
+                    elif key == "resolution":
+                        res = RESOLUTIONS[self.game.settings["resolution"]]
+                        val = f"{res[0]}x{res[1]}"
+                    elif key == "grid":
+                        val = s["on"] if self.game.settings["show_grid"] else s["off"]
+                    elif key == "fullscreen":
+                        val = s["on"] if self.game.settings["fullscreen"] else s["off"]
+                txt = f"{text}: {val}" if val else text
                 color = (255, 255, 255) if i == selected else (120, 120, 120)
                 self.draw_text(txt, 36, self.game.height // 3 + i * 60, color)
 
@@ -93,9 +88,6 @@ class Menu:
             pygame.display.flip()
 
             for e in pygame.event.get():
-                if e.type == pygame.QUIT:
-                    save_settings(self.game.settings)
-                    return
                 if e.type == pygame.KEYDOWN:
                     if e.key == pygame.K_ESCAPE:
                         save_settings(self.game.settings)
@@ -105,30 +97,26 @@ class Menu:
                     elif e.key == pygame.K_DOWN:
                         selected = (selected + 1) % len(items)
                     elif e.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_RETURN):
-                        key = items[selected]
-                        self.change_setting(key)
-                        save_settings(self.game.settings)
+                        if items[selected] == "back":
+                            save_settings(self.game.settings)
+                            return
+                        else:
+                            self.change_setting(items[selected])
+                            save_settings(self.game.settings)
 
     def change_setting(self, key):
         if key == "language":
-            self.game.settings["language"] = "en" if self.game.settings.get("language", "ru") == "ru" else "ru"
+            self.game.settings["language"] = "en" if self.game.settings["language"] == "ru" else "ru"
         elif key == "controls":
-            self.game.settings["controls"] = "wasd" if self.game.settings.get("controls", "arrows") == "arrows" else "arrows"
-            self.game.controls = CONTROL_SETS[self.game.settings["controls"]]
+            self.game.settings["controls"] = "wasd" if self.game.settings["controls"] == "arrows" else "arrows"
         elif key == "color":
-            idx = (self.game.settings.get("snake_color", 0) + 1) % len(SNAKE_COLORS)
-            self.game.settings["snake_color"] = idx
-            self.game.snake_color = SNAKE_COLORS[idx]
-            if hasattr(self.game, "snake") and self.game.snake:
-                self.game.snake.color = SNAKE_COLORS[idx]
+            self.game.settings["snake_color"] = (self.game.settings["snake_color"] + 1) % len(SNAKE_COLORS)
+            self.game.snake_color = SNAKE_COLORS[self.game.settings["snake_color"]]
         elif key == "resolution":
-            idx = (self.game.settings.get("resolution", 0) + 1) % len(RESOLUTIONS)
-            self.game.settings["resolution"] = idx
+            self.game.settings["resolution"] = (self.game.settings["resolution"] + 1) % len(RESOLUTIONS)
             self.game.apply_resolution()
         elif key == "grid":
-            self.game.settings["show_grid"] = not self.game.settings.get("show_grid", False)
+            self.game.settings["show_grid"] = not self.game.settings["show_grid"]
         elif key == "fullscreen":
-            self.game.settings["fullscreen"] = not self.game.settings.get("fullscreen", False)
+            self.game.settings["fullscreen"] = not self.game.settings["fullscreen"]
             self.game.apply_resolution()
-        elif key == "back":
-            save_settings(self.game.settings)

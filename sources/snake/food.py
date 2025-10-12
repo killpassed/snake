@@ -10,11 +10,14 @@ class Food:
         self.color = (255, 0, 0)
         self.randomize()
 
-    def randomize(self):
-        self.position = (
-            random.randint(0, self.grid_width - 1),
-            random.randint(0, self.grid_height - 1)
-        )
+    def randomize(self, snake_body=None):
+        while True:
+            self.position = (
+                random.randint(0, self.grid_width - 1),
+                random.randint(0, self.grid_height - 1)
+            )
+            if not snake_body or self.position not in snake_body:
+                break
 
     def draw(self, surface):
         x, y = self.position

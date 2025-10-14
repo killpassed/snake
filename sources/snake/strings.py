@@ -3,6 +3,7 @@ STRINGS = {
         "title": "ЗМЕЙКА",
         "play": "Играть",
         "settings": "Настройки",
+        "high_scores": "Рекорды",
         "quit": "Выход",
         "controls": "Управление",
         "language": "Язык",
@@ -14,13 +15,18 @@ STRINGS = {
         "fullscreen": "Полноэкранный режим",
         "lives": "Жизни",
         "score": "Счёт",
+        "record": "Рекорд",
         "pause": "Пауза",
-        "back": "Назад"
+        "back": "Назад",
+        "game_over": "Игра окончена",
+        "your_score": "Ваш счёт",
+        "press_enter": "Нажмите Enter, чтобы продолжить"
     },
     "en": {
         "title": "SNAKE",
         "play": "Play",
         "settings": "Settings",
+        "high_scores": "High Scores",
         "quit": "Quit",
         "controls": "Controls",
         "language": "Language",
@@ -32,7 +38,11 @@ STRINGS = {
         "fullscreen": "Fullscreen",
         "lives": "Lives",
         "score": "Score",
+        "record": "Record",
         "pause": "Pause",
-        "back": "Back"
+        "back": "Back",
+        "game_over": "Game Over",
+        "your_score": "Your Score",
+        "press_enter": "Press Enter to continue"
     }
 }

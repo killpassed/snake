@@ -46,3 +46,31 @@ def save_settings(settings):
             json.dump(settings, f, ensure_ascii=False, indent=4)
     except Exception as e:
         print(f"Ошибка сохранения настроек: {e}")
+
+def get_data_dir():
+    return SETTINGS_PATH.parent
+
+def get_highscores_path():
+    return get_data_dir() / "highscores.json"
+
+def load_highscores():
+    path = get_highscores_path()
+    if not path.exists():
+        return []
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Ошибка чтения рекордов: {e}")
+        return []
+
+def save_highscore(score):
+    path = get_highscores_path()
+    try:
+        scores = load_highscores()
+        scores.append(score)
+        scores = sorted(scores, reverse=True)[:10]
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(scores, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"Ошибка сохранения рекордов: {e}")

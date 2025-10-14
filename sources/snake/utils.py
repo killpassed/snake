@@ -1,76 +1,40 @@
-import json
-import os
+import json, os
 from pathlib import Path
 
-def get_settings_path():
-    base_dir = Path(os.getenv("LOCALAPPDATA", Path.home()))
-    settings_dir = base_dir / "vkmontedd-games" / "Snake"
-    settings_dir.mkdir(parents=True, exist_ok=True)
-    return settings_dir / "settings.json"
-
-SETTINGS_PATH = get_settings_path()
+APPDATA_PATH = Path(os.getenv("APPDATA")) / "Local" / "vkmontedd-games" / "Snake"
+SETTINGS_FILE = APPDATA_PATH / "settings.json"
 
 DEFAULT_SETTINGS = {
     "language": "ru",
     "controls": "arrows",
-    "color": 0,
+    "snake_color": 0,
     "resolution": 0,
-    "grid": False,
-    "fullscreen": False
+    "show_grid": False,
+    "fullscreen": False,
+    "high_score": 0
 }
 
+def ensure_settings_complete(data):
+    for k, v in DEFAULT_SETTINGS.items():
+        if k not in data:
+            data[k] = v
+    return data
+
 def load_settings():
-    try:
-        if SETTINGS_PATH.exists():
-            with open(SETTINGS_PATH, "r", encoding="utf-8") as f:
-                settings = json.load(f)
-            updated = False
-            for key, value in DEFAULT_SETTINGS.items():
-                if key not in settings:
-                    settings[key] = value
-                    updated = True
-            if updated:
-                save_settings(settings)
-            return settings
-        else:
-            save_settings(DEFAULT_SETTINGS)
-            return DEFAULT_SETTINGS.copy()
-    except Exception as e:
-        print(f"Ошибка загрузки настроек: {e}")
-        save_settings(DEFAULT_SETTINGS)
-        return DEFAULT_SETTINGS.copy()
+    APPDATA_PATH.mkdir(parents=True, exist_ok=True)
+    if SETTINGS_FILE.exists():
+        try:
+            with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+        except:
+            data = DEFAULT_SETTINGS.copy()
+    else:
+        data = DEFAULT_SETTINGS.copy()
+    data = ensure_settings_complete(data)
+    save_settings(data)
+    return data
 
-def save_settings(settings):
-    try:
-        with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
-            json.dump(settings, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Ошибка сохранения настроек: {e}")
-
-def get_data_dir():
-    return SETTINGS_PATH.parent
-
-def get_highscores_path():
-    return get_data_dir() / "highscores.json"
-
-def load_highscores():
-    path = get_highscores_path()
-    if not path.exists():
-        return []
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"Ошибка чтения рекордов: {e}")
-        return []
-
-def save_highscore(score):
-    path = get_highscores_path()
-    try:
-        scores = load_highscores()
-        scores.append(score)
-        scores = sorted(scores, reverse=True)[:10]
-        with open(path, "w", encoding="utf-8") as f:
-            json.dump(scores, f, ensure_ascii=False, indent=4)
-    except Exception as e:
-        print(f"Ошибка сохранения рекордов: {e}")
+def save_settings(data):
+    APPDATA_PATH.mkdir(parents=True, exist_ok=True)
+    with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
+        json.dump(ensure_settings_complete(data), f, indent=4, ensure_ascii=False)

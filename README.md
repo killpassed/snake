@@ -1,6 +1,6 @@
 # 🐍 Snake Game by killpassed
 
-> Версия: **1.1**  
+> Версия: **1.2 release**  
 > Автор: **killpassed**
 
 ---

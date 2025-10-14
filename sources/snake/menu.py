@@ -38,7 +38,7 @@ class Menu:
             for i, opt in enumerate(options):
                 color = (255, 255, 255) if i == self.selected else (150, 150, 150)
                 self.draw_text(opt, 40, self.game.height // 2 + i * 60, color)
-            self.draw_corner_text(["version 1.2", "game by killpassed"])
+            self.draw_corner_text(["version 1.2", "game by vkmontedd"])
             pygame.display.flip()
 
             for e in pygame.event.get():
@@ -89,7 +89,7 @@ class Menu:
                 color = (255, 255, 255) if i == selected else (120, 120, 120)
                 self.draw_text(txt, 36, self.game.height // 3 + i * 60, color)
 
-            self.draw_corner_text(["version 1.2", "game by killpassed"])
+            self.draw_corner_text(["version 1.2", "game by vkmontedd"])
             pygame.display.flip()
 
             for e in pygame.event.get():

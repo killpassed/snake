@@ -10,7 +10,7 @@ import os
 class Game:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("snake by killpassed")
+        pygame.display.set_caption("snake by vkmontedd")
         self.settings = load_settings()
         self.apply_resolution()
         self.clock = pygame.time.Clock()

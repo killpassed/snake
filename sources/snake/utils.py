@@ -4,7 +4,7 @@ from pathlib import Path
 
 def get_settings_path():
     base_dir = Path(os.getenv("LOCALAPPDATA", Path.home()))
-    settings_dir = base_dir / "killpassed-games" / "Snake"
+    settings_dir = base_dir / "vkmontedd-games" / "Snake"
     settings_dir.mkdir(parents=True, exist_ok=True)
     return settings_dir / "settings.json"
 

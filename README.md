@@ -1,7 +1,7 @@
-# 🐍 Snake Game by killpassed
+# 🐍 Snake Game by vkmontedd
 
 > Version: **1.2 Release**  
-> Author: **killpassed**
+> Author: **vkmontedd**
 
 ---
 
@@ -25,7 +25,7 @@
 ## 📋 Changelog — Version 1.2
 
 1. Added **High Score Menu**  
-2. Settings and records are now saved in `settings.txt` under `AppData\Local\killpassed-games\Snake`  
+2. Settings and records are now saved in `settings.txt` under `AppData\Local\vkmontedd-games\Snake`  
 3. Added **Game Over Menu** after losing  
 
 ---
@@ -57,5 +57,5 @@
 ## 📋 Журнал изменений — Версия 1.2
 
 1. Добавлено **меню рекордов**  
-2. Сохранение настроек и рекордов теперь происходит в `settings.txt` по пути `AppData\Local\killpassed-games\Snake`  
+2. Сохранение настроек и рекордов теперь происходит в `settings.txt` по пути `AppData\Local\vkmontedd-games\Snake`  
 3. Добавлено **меню проигрыша** после окончания игры  
